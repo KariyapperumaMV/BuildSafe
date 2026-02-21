@@ -9,6 +9,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 
+
 /*Register routes*/
 
 //Helmet routes

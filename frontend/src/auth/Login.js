@@ -18,7 +18,6 @@ const Login = () => {
             placeholder="Password"
             className="login-input"
           />
-          <span className="eye">👁</span>
         </div>
 
         <button className="login-btn">Login</button>

@@ -5,10 +5,10 @@ const User = require("../models/User");
    ===================================================== */
 exports.addUser = async (req, res) => {
   try {
-    const { userId, name, nic, user_type } = req.body;
+    const { userId, name, nic, password, user_type, helmet} = req.body;
 
     // ---- BASIC VALIDATION ----
-    if (!userId || !name || !nic || !user_type) {
+    if (!userId || !name || !nic || !user_type || !password || !helmet) {
       return res.status(400).json({
         message: "Missing required fields"
       });
@@ -31,9 +31,10 @@ exports.addUser = async (req, res) => {
 
     // ---- CREATE USER ----
     const user = await User.create({
-      userId,
+      userId, // TODO: shuld be changed
       name,
       nic,
+      password,
       user_type,
       helmet: null
     });

@@ -1,9 +1,14 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  userId: String,
+  userId: { // TODO: should auto generated
+    type: String,
+    required: true,
+    unique: true
+  },
   name: String,
   nic: String,
+  password: String, // TODO: should be stored in hashed
 
   user_type: {
     type: String,

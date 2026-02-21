@@ -1,55 +1,54 @@
 /* ===== LOGIN PAGE ===== */
 .login-page {
   min-height: 100vh;
-  background: #222;
+  background: #1f1f1f;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Card */
 .login-card {
-  background: #e0e0e0;
-  width: 340px;
-  padding: 30px;
-  border-radius: 20px;
+  background: #e6e6e6;
+  width: 380px;
+  padding: 36px 32px;
+  border-radius: 24px;
   text-align: center;
 }
 
+/* Logo */
 .login-logo {
-  width: 120px;
-  margin-bottom: 20px;
+  width: 110px;
+  margin-bottom: 26px;
 }
 
+/* Inputs */
 .login-input {
   width: 100%;
-  padding: 10px 14px;
-  border-radius: 20px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 24px;
   border: 2px solid #1e73ff;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   outline: none;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
+/* Password wrapper (future eye icon safe) */
 .password-wrapper {
   position: relative;
 }
 
-.password-wrapper .eye {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 14px;
-}
-
+/* Button */
 .login-btn {
   width: 100%;
-  padding: 10px;
-  border-radius: 20px;
+  height: 46px;
+  border-radius: 24px;
   border: none;
   background: #1e73ff;
-  color: #fff;
-  font-weight: bold;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
 }
