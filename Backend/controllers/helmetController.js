@@ -164,3 +164,22 @@ exports.getHelmetCommand = async (req, res) => {
   }
 };
 
+/* =====================================================
+   GET AVAILABLE HELMET
+   ===================================================== */
+   exports.getAvailableHelmets = async (req, res) => {
+  try {
+    const helmets = await HelmetData.distinct("helmetId");
+
+    res.status(200).json({
+      count: helmets.length,
+      helmets
+    });
+
+  } catch (error) {
+    console.error("Get helmets error:", error);
+    res.status(500).json({
+      message: "Unable to fetch helmets"
+    });
+  }
+};

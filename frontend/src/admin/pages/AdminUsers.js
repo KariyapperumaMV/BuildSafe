@@ -1,7 +1,10 @@
-// src/admin/pages/AdminUsers.js
+import { useState } from "react";
 import UserList from "../components/UserList";
+import AddUserModal from "../components/AddUserModal";
 
 const AdminUsers = () => {
+  const [showAddUser, setShowAddUser] = useState(false);
+
   return (
     <>
       <div className="users-toolbar">
@@ -10,10 +13,19 @@ const AdminUsers = () => {
           placeholder="Search User"
           className="search-input"
         />
-        <button className="primary-btn">Add User</button>
+        <button
+          className="primary-btn"
+          onClick={() => setShowAddUser(true)}
+        >
+          Add User
+        </button>
       </div>
 
       <UserList />
+
+      {showAddUser && (
+        <AddUserModal onClose={() => setShowAddUser(false)} />
+      )}
     </>
   );
 };

@@ -1,14 +1,23 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  userId: { // TODO: should auto generated
+  userId: {
     type: String,
     required: true,
     unique: true
   },
   name: String,
-  nic: String,
-  password: String, // TODO: should be stored in hashed
+
+  nic:{
+    type:String,
+    unique: true
+  },
+
+  phoneNo: String,
+
+  email: String,
+  
+  password: String,
 
   user_type: {
     type: String,
@@ -17,8 +26,9 @@ const userSchema = new mongoose.Schema({
   },
 
   helmet: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Helmet",
+    //type: mongoose.Schema.Types.ObjectId,
+    //ref: "Helmet",
+    type: String,
     default: null
   }
 });
