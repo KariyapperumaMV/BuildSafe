@@ -22,7 +22,7 @@ const UpdateUserModal = ({ user, onClose }) => {
     const fetchHelmets = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/helmets/available"
+          "http://localhost:5000/api/helmet/available"
         );
         setHelmets(res.data.helmets || []);
       } catch (error) {

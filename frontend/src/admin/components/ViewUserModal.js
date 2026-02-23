@@ -16,12 +16,15 @@ const ViewUserModal = ({ user, onClose }) => {
           {/* Left panel */}
           <div className="modal-left">
             <div className="user-avatar large" />
-            <p><strong>User ID</strong></p>
-            <p>{user.id}</p>
-            <p>{user.name}</p>
-            <p>{user.role}</p>
-            <p>{user.nic}</p>
-            <p>{user.helmet}</p>
+
+            <p>User ID: {user.userId}</p>
+
+            <p>User Name: {user.name}</p>
+            <p>User Type: {user.user_type}</p>
+            <p>NIC: {user.nic}</p>
+            <p>Phone No: {user.phone}</p>
+            <p>Email: {user.email}</p>
+            <p>Helmet: {user.helmet || "Not assigned"}</p>
           </div>
 
           {/* Right panel */}

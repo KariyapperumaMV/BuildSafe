@@ -13,7 +13,10 @@ const UserList = () => {
       const mappedUsers = res.data.users.map(user => ({
         id: user.userId,
         role: user.user_type,
-        status: "safe",
+        name: user.name,
+        
+        status: user.user_type === "ADMIN" ? "admin" : "safe",
+
         raw: user
       }));
 

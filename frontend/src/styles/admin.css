@@ -383,4 +383,13 @@ body {
   margin-top: 10px;
 }
 
+/* ADMIN USER ROW */
+.user-row.admin {
+  border-right-color: #999;
+}
 
+.user-row.admin strong,
+.user-row.admin p {
+  color: #111;
+  font-weight: normal;
+}

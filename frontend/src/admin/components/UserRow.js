@@ -16,6 +16,7 @@ const UserRow = ({ user }) => {
           <div className="user-avatar" />
           <div>
             <strong>{user.id}</strong>
+            <p>User name: {user.name}</p>
             <p>User type: {user.role}</p>
           </div>
         </div>

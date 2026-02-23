@@ -1,7 +1,7 @@
 import logo from "../../pictures/logo.png";
 import { NavLink } from "react-router-dom";
 
-const AdminSidebar = () => {
+const WorkerSidebar = () => {
   return (
     <aside className="sidebar">
       <div className="logo">
@@ -9,19 +9,19 @@ const AdminSidebar = () => {
       </div>
 
       <nav>
-        <NavLink to="/admin/dashboard" className="nav-item">
+        <NavLink to="/worker/dashboard" className="nav-item">
           Home
         </NavLink>
 
-        <NavLink to="/admin/users" className="nav-item">
+        <NavLink to="" className="nav-item">
           Users
         </NavLink>
 
-        <NavLink to="/admin/reports" className="nav-item">
+        <NavLink to="" className="nav-item">
           Reports
         </NavLink>
 
-        <NavLink to="/admin/analytics" className="nav-item">
+        <NavLink to="" className="nav-item">
           Analytics
         </NavLink>
       </nav>
@@ -29,4 +29,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default WorkerSidebar;

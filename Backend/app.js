@@ -4,6 +4,7 @@ const cors = require("cors");
 //for registering
 const helmetRoutes = require("./routes/helmetRoutes");
 const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes")
 
 const app = express();
 
@@ -24,10 +25,13 @@ app.use(cors({
 
 /*Register routes*/
 
-//Helmet routes
+// Helmet routes
 app.use("/api/helmet", helmetRoutes);
 
-//Admin-user routes
+// Admin-user routes
 app.use("/api/users", userRoutes);
+
+// Authentication routes
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
