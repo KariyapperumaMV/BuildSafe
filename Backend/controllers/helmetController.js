@@ -183,3 +183,45 @@ exports.getHelmetCommand = async (req, res) => {
     });
   }
 };
+
+/* =====================================================
+   GET HELMET DATA (LATEST)
+   ===================================================== */
+exports.getLatestHelmetData = async (req, res) => {
+  try {
+    const { helmetId } = req.params;
+
+    if (!helmetId) {
+      return res.status(400).json({
+        message: "Helmet ID is required"
+      });
+    }
+
+    const latestData = await HelmetData.findOne({ helmetId })
+      .sort({ timestamp: -1 });
+
+    if (!latestData) {
+      return res.status(404).json({
+        message: "No data found for this helmet"
+      });
+    }
+
+    res.status(200).json(latestData);
+
+  } catch (error) {
+    console.error("Get latest helmet data error:", error);
+    res.status(500).json({
+      message: "Unable to fetch helmet data"
+    });
+  }
+};
+/* =====================================================
+   GET HELMET DATA (FOR PAST 7 DAYS)
+   ===================================================== */
+  //Recent data
+
+  //Past 7 days average
+
+  //Total average
+
+  //Comment

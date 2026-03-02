@@ -6,7 +6,8 @@ const {
   receiveHelmetEmergencyData,
   sendHelmetResetCommand,
   getHelmetCommand,
-  getAvailableHelmets
+  getAvailableHelmets,
+  getLatestHelmetData
 } = require("../controllers/helmetController");
 
 // Recieve normal datapacket
@@ -23,5 +24,8 @@ router.get("/command/:helmetId", getHelmetCommand);
 
 // Get available helmets - for the dropdown box
 router.get("/available", getAvailableHelmets);
+
+// Get recent helmet data
+router.get("/latest/:helmetId", getLatestHelmetData);
 
 module.exports = router;
