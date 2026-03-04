@@ -30,6 +30,7 @@ const SensorGauge = ({
   //   { value: 39, color: "#f1c40f", label: "39" }
   // ]
    classifyType,
+   onClick
 }) => {
     const v = value ?? min;
   const clamped = Math.min(Math.max(v, min), max);
@@ -52,7 +53,7 @@ const SensorGauge = ({
   classifyType && value !== undefined
     ? classify[classifyType](value)
     : "";
-    
+
   return (
     <div className={`sensor-gauge ${status}`}>
       <svg viewBox="-10 -10 220 120" width="160">
@@ -120,7 +121,15 @@ const SensorGauge = ({
       <div className="gauge-value">
         {value ?? "-"} {unit}
       </div>
-      <div className={`gauge-label ${status}`}>{label}</div>
+
+      {/* Sensor Label */}
+      <div
+        className={`gauge-label ${status} clickable`}
+        onClick={() => onClick?.(classifyType)}
+      >
+        {label}
+      </div>
+      
     </div>
   );
 };

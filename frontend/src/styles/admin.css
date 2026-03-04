@@ -576,3 +576,67 @@ body {
 .environment-data .gauge-row {
   width: calc(4 * 160px + 36px);
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+/* 7 days summery */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.detail-box {
+  background: #f2f2f2;
+  width: 480px;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.last-updated {
+  font-size: 13px;
+  margin-top: 8px;
+  color: #555;
+}
+
+.seven-day-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 180px;
+  margin: 16px 0;
+  padding: 0 6px;
+}
+
+.bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  height: 100%;
+}
+
+.bar {
+  width: 24px;
+  background: #4fa3f7;
+  border-radius: 6px 6px 0 0;
+  transition: height 0.3s ease;
+}
+
+.bar-label {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.detail-summary {
+  background: #e0e0e0;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px 0;
+}

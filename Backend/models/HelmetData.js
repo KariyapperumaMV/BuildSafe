@@ -28,4 +28,6 @@ const helmetDataSchema = new mongoose.Schema({
   }
 });
 
+helmetDataSchema.index({ helmetId: 1, timestamp: -1 });
+
 module.exports = mongoose.model("HelmetData", helmetDataSchema);

@@ -7,7 +7,8 @@ const {
   sendHelmetResetCommand,
   getHelmetCommand,
   getAvailableHelmets,
-  getLatestHelmetData
+  getLatestHelmetData,
+  get7DaysHelmetData
 } = require("../controllers/helmetController");
 
 // Recieve normal datapacket
@@ -28,4 +29,7 @@ router.get("/available", getAvailableHelmets);
 // Get recent helmet data
 router.get("/latest/:helmetId", getLatestHelmetData);
 
+// Get 7 days average data
+router.get("/last7days/:helmetId", get7DaysHelmetData);
+ 
 module.exports = router;

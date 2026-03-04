@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SensorGauge from "./SensorGauge";
 import { classify } from "./SensorUtils";
+import SensorDetailOverlay from "./SensorDetailOverlay";
 import userAvatar from "../../pictures/user.png";
 
 const ViewUserModal = ({ user, onClose }) => {
   const [helmetData, setHelmetData] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // sensor history
+  const [selectedSensor, setSelectedSensor] = useState(null);
+  const [sevenDayData, setSevenDayData] = useState(null);
 
   // map label
   const toDMS = (deg, isLat) => {
@@ -29,6 +34,28 @@ const ViewUserModal = ({ user, onClose }) => {
     gps
       ? `${toDMS(gps.lat, true)} ${toDMS(gps.lng, false)}`
       : "Location unavailable";
+
+  // 7 days average calculation
+  const fetchSevenDays = async (sensorKey) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/helmet/last7days/${user.helmet}`
+      );
+
+      const raw = res.data;
+
+      const formatted = Object.entries(raw).map(([date, sensors]) => ({
+        date,
+        value: sensors[sensorKey]
+      }));
+
+      setSevenDayData(formatted);
+      setSelectedSensor(sensorKey);
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // summery
   const SENSOR_RULES = {
@@ -182,6 +209,16 @@ const ViewUserModal = ({ user, onClose }) => {
     <div className="modal-overlay">
       <div className="modal-box">
 
+        {selectedSensor && sevenDayData && (
+          <SensorDetailOverlay
+            sensorKey={selectedSensor}
+            data={sevenDayData}
+            latestValue={helmetData.sensors[selectedSensor]}
+            lastTimestamp={helmetData.timestamp}
+            onClose={() => setSelectedSensor(null)}
+          />
+        )}
+        
         {/* HEADER */}
         <div className="modal-header">
           <span className={`status-badge ${helmetData?.status?.overall?.toLowerCase()}`}>
@@ -236,6 +273,7 @@ const ViewUserModal = ({ user, onClose }) => {
                           { value: 42, color: "#e74c3c", label: "42" },
                         ]}
                         classifyType="body"
+                        onClick={() => fetchSevenDays("body_temp")}
                       />
 
                       <SensorGauge
@@ -255,6 +293,7 @@ const ViewUserModal = ({ user, onClose }) => {
                         ]}
                         type="symmetric"
                         classifyType="heart"
+                        onClick={() => fetchSevenDays("heart_rate")}
                       />
                     </div>
                   </div>
@@ -302,6 +341,7 @@ const ViewUserModal = ({ user, onClose }) => {
                         { value: 100, color: "#e74c3c", label: "100" },
                       ]}
                       classifyType="sound"
+                      onClick={() => fetchSevenDays("noise_db")}
                     />
 
                     <SensorGauge
@@ -317,6 +357,7 @@ const ViewUserModal = ({ user, onClose }) => {
                         { value: 45, color: "#e74c3c", label: "45" },
                       ]}
                       classifyType="ambient"
+                      onClick={() => fetchSevenDays("ambient_temp")}
                     />
 
                     <SensorGauge
@@ -332,6 +373,7 @@ const ViewUserModal = ({ user, onClose }) => {
                         { value: 400, color: "#e74c3c", label: "400" },
                       ]}
                       classifyType="gas"
+                      onClick={() => fetchSevenDays("gas_ppm")}
                     />
 
                     <SensorGauge
@@ -347,6 +389,7 @@ const ViewUserModal = ({ user, onClose }) => {
                         { value: 10, color: "#e74c3c", label: "10" },
                       ]}
                       classifyType="uv"
+                      onClick={() => fetchSevenDays("uv_index")}
                     />
                   </div>
                 </div>

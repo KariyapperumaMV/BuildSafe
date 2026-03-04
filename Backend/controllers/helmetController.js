@@ -215,13 +215,69 @@ exports.getLatestHelmetData = async (req, res) => {
     });
   }
 };
+
 /* =====================================================
    GET HELMET DATA (FOR PAST 7 DAYS)
    ===================================================== */
-  //Recent data
+exports.get7DaysHelmetData = async (req, res) => {
+  try {
+    const { helmetId } = req.params;
 
-  //Past 7 days average
+    if (!helmetId) {
+      return res.status(400).json({ message: "Helmet ID required" });
+    }
 
-  //Total average
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  //Comment
+    const data = await HelmetData.aggregate([
+      {
+        $match: {
+          helmetId: helmetId,
+          timestamp: { $gte: sevenDaysAgo }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            day: {
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$timestamp",
+                timezone: "Asia/Colombo"   // ✅ important fix
+              }
+            }
+          },
+          body_temp: { $avg: "$sensors.body_temp" },
+          heart_rate: { $avg: "$sensors.heart_rate" },
+          ambient_temp: { $avg: "$sensors.ambient_temp" },
+          gas_ppm: { $avg: "$sensors.gas_ppm" },
+          uv_index: { $avg: "$sensors.uv_index" },
+          noise_db: { $avg: "$sensors.noise_db" }
+        }
+      },
+      { $sort: { "_id.day": 1 } }
+    ]);
+
+    const result = {};
+
+    data.forEach(d => {
+      const day = d._id.day;
+
+      result[day] = {
+        body_temp: d.body_temp ?? 0,
+        heart_rate: d.heart_rate ?? 0,
+        ambient_temp: d.ambient_temp ?? 0,
+        gas_ppm: d.gas_ppm ?? 0,
+        uv_index: d.uv_index ?? 0,
+        noise_db: d.noise_db ?? 0
+      };
+    });
+
+    res.status(200).json(result);
+
+  } catch (err) {
+    console.error("7-day aggregation error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
