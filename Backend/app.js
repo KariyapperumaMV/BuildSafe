@@ -5,6 +5,7 @@ const cors = require("cors");
 const helmetRoutes = require("./routes/helmetRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes")
+const analyticsRoutes = require("./routes/analyticsRoutes");
 
 const app = express();
 
@@ -33,5 +34,8 @@ app.use("/api/users", userRoutes);
 
 // Authentication routes
 app.use("/api/auth", authRoutes);
+
+// Analytics routers
+app.use("/api/analytics", analyticsRoutes);
 
 module.exports = app;
