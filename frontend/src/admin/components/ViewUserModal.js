@@ -290,12 +290,12 @@ const ViewUserModal = ({ user, onClose }) => {
                         label="Heart rate"
                         value={helmetData.sensors?.heart_rate}
                         unit="bpm"
-                        min={80}
+                        min={70}
                         max={180}
                         safeMin={88}
                         safeMax={180}
                         thresholds={[
-                          { value: 85, color: "#e74c3c", label: "85" },
+                          { value: 80, color: "#e74c3c", label: "80" },
                           { value: 88, color: "#f1c40f", label: "88" },
                           { value: 149, color: "#2ecc71", label: "149" },
                           { value: 175, color: "#f1c40f", label: "175" },
@@ -405,7 +405,7 @@ const ViewUserModal = ({ user, onClose }) => {
                 </div>
 
                 {/* SUMMARY */}
-                <div className="modal-section">
+                <div className="modal-section summary">
                   <h4>Summary</h4>
                   <div className="summary-box">
                     <p>
@@ -465,8 +465,6 @@ const ViewUserModal = ({ user, onClose }) => {
 
         <div className="modal-footer">
           <button className="gray-btn" onClick={onClose}>Close</button>
-          <button className="gray-btn">Update</button>
-          <button className="gray-btn">Delete</button>
         </div>
       </div>
     </div>

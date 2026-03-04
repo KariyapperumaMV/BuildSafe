@@ -85,7 +85,7 @@ const SensorGauge = ({
           y1={cy}
           x2={cx}
           y2={cy - 60}
-          stroke="#111"
+          stroke="#fff"
           strokeWidth="3"
           style={{
             transform: `rotate(${angle}deg)`,
@@ -95,7 +95,7 @@ const SensorGauge = ({
         />
 
         {/* CENTER DOT */}
-        <circle cx={cx} cy={cy} r="5" fill="#111" />
+        <circle cx={cx} cy={cy} r="5" fill="#fff" />
 
         {/* THRESHOLD LABELS */}
         {thresholds.map((t, i) => {
@@ -108,8 +108,8 @@ const SensorGauge = ({
               key={i}
               x={p.x}
               y={p.y}
-              fontSize="10"
-              fill="#333"
+              fontSize="12"
+              fill="#fff"
               textAnchor="middle"
             >
               {t.label}

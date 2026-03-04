@@ -2,6 +2,7 @@ import { useState } from "react";
 import ViewUserModal from "./ViewUserModal";
 import UpdateUserModal from "./UpdateUserModal";
 import DeleteUserModal from "./DeleteUserModal";
+import avatar from "../../pictures/user.png";
 
 const UserRow = ({ user }) => {
 
@@ -11,11 +12,15 @@ const UserRow = ({ user }) => {
 
   return (
     <>
-      <div className={`user-row ${user.status}`}>
+      <div className={`user-row glass-card ${user.status || "safe"}`}>
 
         <div className="user-info">
 
-          <div className="user-avatar" />
+          <img
+            src={avatar}
+            alt="User avatar"
+            className="user-avatar"
+          />
 
           <div className="user-meta">
             <div className="user-id">
