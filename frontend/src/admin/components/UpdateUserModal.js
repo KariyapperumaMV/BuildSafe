@@ -31,6 +31,11 @@ const UpdateUserModal = ({ user, onClose }) => {
     };
 
     fetchHelmets();
+
+    // refresh every 60 seconds
+    const interval = setInterval(fetchHelmets, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // ----------------------------------

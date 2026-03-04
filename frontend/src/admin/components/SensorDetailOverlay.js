@@ -43,7 +43,7 @@ const SENSOR_META = {
     thresholds: [
       { value: 30, color: "#2ecc71", label: "30" },
       { value: 80, color: "#2ecc71", label: "80" },
-      { value: 90, color: "#f1c40f", label: "90" },                        
+      { value: 90, color: "#f1c40f", label: "90" },
       { value: 100, color: "#e74c3c", label: "100" }
     ]
   },
@@ -57,7 +57,7 @@ const SENSOR_META = {
     thresholds: [
       { value: 22, color: "#2ecc71", label: "22" },
       { value: 27, color: "#2ecc71", label: "27" },
-      { value: 35, color: "#f1c40f", label: "35" },                        
+      { value: 35, color: "#f1c40f", label: "35" },
       { value: 45, color: "#e74c3c", label: "45" }
     ]
   },
@@ -71,27 +71,25 @@ const SENSOR_META = {
     thresholds: [
       { value: 0, color: "#2ecc71", label: "0" },
       { value: 150, color: "#2ecc71", label: "150" },
-      { value: 300, color: "#f1c40f", label: "300" },                        
+      { value: 300, color: "#f1c40f", label: "300" },
       { value: 400, color: "#e74c3c", label: "400" }
     ]
   },
 
   uv_index: {
     name: "UV Light",
-    unit: "ppm",
+    unit: "",
     type: "",
     min: 0,
     max: 10,
     thresholds: [
       { value: 0, color: "#2ecc71", label: "0" },
       { value: 3, color: "#2ecc71", label: "3" },
-      { value: 8, color: "#f1c40f", label: "8" },                        
+      { value: 8, color: "#f1c40f", label: "8" },
       { value: 10, color: "#e74c3c", label: "10" }
     ]
-  },
-}
-
-/* ================= COMPONENT ================= */
+  }
+};
 
 const SensorDetailOverlay = ({
   sensorKey,
@@ -127,31 +125,31 @@ const SensorDetailOverlay = ({
     <div className="detail-overlay">
       <div className="detail-box">
 
-        <h2>
-          {meta.name} –{" "}
-          <span className={status}>
-            {status.toUpperCase()}
-          </span>
-        </h2>
+        <div className="detail-header">
+          <h2>
+            {meta.name} – <span className={status}>{status.toUpperCase()}</span>
+          </h2>
 
-        <SensorGauge
-          label={meta.name}
-          value={latestValue}
-          unit={meta.unit}
-          min={meta.min}
-          max={meta.max}
-          thresholds={meta.thresholds}
-          classifyType={meta.type}
-        />
+          <SensorGauge
+            label={meta.name}
+            value={latestValue}
+            unit={meta.unit}
+            min={meta.min}
+            max={meta.max}
+            thresholds={meta.thresholds}
+            classifyType={meta.type}
+          />
 
-        <p>
-          Last updated: {formatSriLankaTime(lastTimestamp)}
-        </p>
+          <p className="last-updated">
+            Last updated: {formatSriLankaTime(lastTimestamp)}
+          </p>
+        </div>
 
         <h4>For past 7 days</h4>
 
         <div className="seven-day-chart">
           {data.map((d, i) => {
+
             const percent = Math.max(
               0,
               Math.min(
@@ -160,19 +158,42 @@ const SensorDetailOverlay = ({
               )
             );
 
+            const today = new Date().toISOString().slice(0,10);
+            const isToday = d.date === today;
+
             return (
               <div key={i} className="bar-wrapper">
-                <div
-                  className="bar"
-                  style={{
-                    height: `${Math.max(percent * 100, 5)}%`
-                  }}
-                />
+
+                <div className="bar-area">
+
+                  <div className="bar-container">
+                    {d.value && (
+                      <span className="bar-value">
+                        {d.value.toFixed(1)}
+                      </span>
+                    )}
+
+                    <div
+                      className={`bar ${isToday ? "bar-today" : ""}`}
+                      style={{
+                        height: d.value
+                          ? `${Math.max(percent * 100, 6)}%`
+                          : "0%"
+                      }}
+                    />
+
+                  </div>
+
+                  <div className="baseline" />
+                </div>
+
                 <span className="bar-label">
                   {new Date(d.date).toLocaleDateString("en-US", {
                     weekday: "short"
                   })}
+                  {isToday && <span className="today-label"> (Today)</span>}
                 </span>
+
               </div>
             );
           })}

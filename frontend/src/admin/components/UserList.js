@@ -14,9 +14,7 @@ const UserList = () => {
         id: user.userId,
         role: user.user_type,
         name: user.name,
-        
         status: user.user_type === "ADMIN" ? "admin" : "safe",
-
         raw: user
       }));
 
@@ -33,25 +31,30 @@ const UserList = () => {
   }, []);
 
   return (
-    <div className="card users-card">
-      <h3>Users</h3>
+    <div className="users-list">
 
-      <div className="users-list">
-        {loading && <p>Loading users...</p>}
+      {loading && (
+        <div className="list-message">
+          Loading users...
+        </div>
+      )}
 
-        {!loading && users.length === 0 && (
-          <p>No users found</p>
-        )}
+      {!loading && users.length === 0 && (
+        <div className="list-message">
+          No users found
+        </div>
+      )}
 
-        {!loading &&
-          users.map(user => (
-            <UserRow
-              key={user.id}
-              user={user}
-              onUserChanged={fetchUsers}
-            />
-          ))}
-      </div>
+      {!loading &&
+        users.map(user => (
+          <UserRow
+            key={user.id}
+            user={user}
+            onUserChanged={fetchUsers}
+          />
+        ))
+      }
+
     </div>
   );
 };

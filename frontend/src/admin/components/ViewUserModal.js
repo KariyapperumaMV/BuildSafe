@@ -44,12 +44,22 @@ const ViewUserModal = ({ user, onClose }) => {
 
       const raw = res.data;
 
-      const formatted = Object.entries(raw).map(([date, sensors]) => ({
-        date,
-        value: sensors[sensorKey]
-      }));
+      const today = new Date();
+      const days = [];
 
-      setSevenDayData(formatted);
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(today.getDate() - i);
+
+        const key = d.toISOString().slice(0,10);
+
+        days.push({
+          date: key,
+          value: raw[key]?.[sensorKey] ?? null
+        });
+      }
+
+      setSevenDayData(days);
       setSelectedSensor(sensorKey);
 
     } catch (err) {

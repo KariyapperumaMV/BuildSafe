@@ -1,10 +1,10 @@
-// src/admin/components/UserRow.js
 import { useState } from "react";
 import ViewUserModal from "./ViewUserModal";
 import UpdateUserModal from "./UpdateUserModal";
 import DeleteUserModal from "./DeleteUserModal";
 
 const UserRow = ({ user }) => {
+
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -12,29 +12,52 @@ const UserRow = ({ user }) => {
   return (
     <>
       <div className={`user-row ${user.status}`}>
+
         <div className="user-info">
+
           <div className="user-avatar" />
-          <div>
-            <strong>{user.id}</strong>
-            <p>User name: {user.name}</p>
-            <p>User type: {user.role}</p>
+
+          <div className="user-meta">
+            <div className="user-id">
+              {user.id}
+            </div>
+
+            <div className="user-name">
+              {user.name}
+            </div>
+
+            <div className="user-role">
+              {user.role}
+            </div>
           </div>
+
         </div>
 
         <div className="user-actions">
-          <button className="gray-btn" onClick={() => setViewOpen(true)}>
+
+          <button
+            className="gray-btn"
+            onClick={() => setViewOpen(true)}
+          >
             View
           </button>
 
-          <button className="gray-btn" onClick={() => setEditOpen(true)}>
+          <button
+            className="gray-btn"
+            onClick={() => setEditOpen(true)}
+          >
             Update
           </button>
 
-          <button className="gray-btn" onClick={() => setDeleteOpen(true)}>
+          <button
+            className="gray-btn danger-btn"
+            onClick={() => setDeleteOpen(true)}
+          >
             Delete
           </button>
-          
+
         </div>
+
       </div>
 
       {viewOpen && (
