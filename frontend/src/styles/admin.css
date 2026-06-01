@@ -926,3 +926,10 @@ body {
   justify-content: flex-end;
   height: 100%;
 }
+
+/* ===== ADMIN ANALYTICS PAGE ===== */
+.analytics-card .gauge-row{
+  display:flex;
+  gap:14px;
+  margin-top:10px;
+}

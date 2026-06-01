@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
   getTodayAnalytics
-} = require("../controllers/analyticsController");
+} = require("../controllers/analyticController");
 
 router.get("/today", getTodayAnalytics);
 
