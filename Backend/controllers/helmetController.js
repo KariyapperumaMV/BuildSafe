@@ -106,6 +106,8 @@ exports.sendHelmetResetCommand = async (req, res) => {
       });
     }
 
+    console.log("Reset queued for:", helmetId);
+
     await HelmetCommand.create({
       helmetId,
       command: "RESET_EMERGENCY",
@@ -129,6 +131,7 @@ exports.sendHelmetResetCommand = async (req, res) => {
    ===================================================== */
 exports.getHelmetCommand = async (req, res) => {
   try {
+    console.log("===== GET HELMET COMMAND CONTROLLER EXECUTED =====");
     const { helmetId } = req.params;
 
     if (!helmetId) {
@@ -136,6 +139,9 @@ exports.getHelmetCommand = async (req, res) => {
         message: "Helmet ID required"
       });
     }
+    console.log("Helmet polling:", helmetId);
+
+    console.log("Polling helmet:", helmetId);
 
     // Get oldest pending command
     const command = await HelmetCommand.findOne({
@@ -144,17 +150,23 @@ exports.getHelmetCommand = async (req, res) => {
     }).sort({ createdAt: 1 });
 
     if (!command) {
+      console.log("No pending command found");
       return res.json({ command: null });
     }
+
+     console.log("Command found:", command.command);
 
     // Mark command as completed and store reset time
     command.status = "COMPLETED";
     await command.save();
 
+     console.log("Sending command to helmet:", command.command);
+
     // Send command to helmet
     res.json({
       command: command.command,
     });
+
 
   } catch (err) {
     console.error("Get command error:", err);
