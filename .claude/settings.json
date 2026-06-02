@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"require\\('dotenv'\\).config\\({path:'./config/config.env'}\\); const m=require\\('mongoose'\\); m.connect\\(process.env.DB_URI\\).then\\(async\\(\\)=>{ const User=m.connection.db.collection\\('users'\\); for \\(const [u,p] of [['USER_0001','Psw1234'],['USER_0002','Psw123']]\\) { const user=await User.findOne\\({userId:u}\\); const ok = user && user.password===p; console.log\\(u, '=>', ok?'LOGIN OK':'FAIL', user?'\\(found\\)':'\\(not found\\)'\\); } await m.disconnect\\(\\); process.exit\\(0\\);}\\).catch\\(e=>{console.error\\('FAIL:',e.message\\);process.exit\\(1\\);}\\);\")",
+      "PowerShell(Write-Output \"--- port 5000 listening? ---\"; \\(Test-NetConnection -ComputerName localhost -Port 5000 -WarningAction SilentlyContinue\\).TcpTestSucceeded; Write-Output \"--- node processes ---\"; Get-Process node -ErrorAction SilentlyContinue | Select-Object Id, StartTime)",
+      "PowerShell($conns = Get-NetTCPConnection -LocalPort 5000 -State Listen -ErrorAction SilentlyContinue; foreach \\($c in $conns\\) { $p = Get-Process -Id $c.OwningProcess -ErrorAction SilentlyContinue; Write-Output \\(\"PID {0}  Name {1}  Start {2}\" -f $c.OwningProcess, $p.ProcessName, $p.StartTime\\) })",
+      "PowerShell(Stop-Process -Id 13596 -Force; Start-Sleep -Milliseconds 800; Write-Output \"stopped; port 5000 now:\"; \\(Test-NetConnection -ComputerName localhost -Port 5000 -WarningAction SilentlyContinue\\).TcpTestSucceeded)",
+      "Bash(node server.js)",
+      "PowerShell(foreach \\($a in @\\(@{u='USER_0001';p='Psw1234'}, @{u='USER_0002';p='Psw123'}\\)\\) { try { $r = Invoke-RestMethod -Uri 'http://localhost:5000/api/auth/login' -Method Post -ContentType 'application/json' -Body \\(@{username=$a.u; password=$a.p} | ConvertTo-Json\\); Write-Output \\(\"{0} => {1} | role={2} name={3}\" -f $a.u, $r.message, $r.user.user_type, $r.user.name\\) } catch { Write-Output \\(\"{0} => ERROR {1}\" -f $a.u, $_.Exception.Message\\) } })",
+      "PowerShell(Write-Output \"--- frontend port 3000? ---\"; \\(Test-NetConnection -ComputerName localhost -Port 3000 -WarningAction SilentlyContinue\\).TcpTestSucceeded; Write-Output \"--- backend port 5000? ---\"; \\(Test-NetConnection -ComputerName localhost -Port 5000 -WarningAction SilentlyContinue\\).TcpTestSucceeded)",
+      "Bash(node -e \"try{require.resolve\\('playwright'\\);console.log\\('playwright: installed'\\)}catch{console.log\\('playwright: NOT installed'\\)}; try{require.resolve\\('puppeteer'\\);console.log\\('puppeteer: installed'\\)}catch{console.log\\('puppeteer: NOT installed'\\)}\")",
+      "PowerShell(try { $r = Invoke-RestMethod -Uri 'http://localhost:5000/api/analytics/today' -Method Get; $r | ConvertTo-Json -Depth 6 } catch { Write-Output \"ERROR: $\\($_.Exception.Message\\)\" })"
+    ]
+  }
+}

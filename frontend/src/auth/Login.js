@@ -23,6 +23,9 @@ const Login = () => {
 
       const { user } = res.data;
 
+      // Persist the logged-in user so other pages know who is signed in.
+      localStorage.setItem("user", JSON.stringify(user));
+
       // Redirect by role
       if (user.user_type === "ADMIN") {
         navigate("/admin/dashboard");

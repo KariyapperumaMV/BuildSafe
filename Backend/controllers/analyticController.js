@@ -4,17 +4,33 @@ const User = require("../models/User");
 exports.getTodayAnalytics = async (req, res) => {
   try {
 
-    const startOfDay = new Date();
-    startOfDay.setHours(0,0,0,0);
+    /* =========================================
+       RANGE: today (default) | week | month
+       ========================================= */
+    const range = req.query.range || "today";
+
+    const startDate = new Date();
+
+    if (range === "week") {
+      startDate.setDate(startDate.getDate() - 7);
+    } else if (range === "month") {
+      startDate.setDate(startDate.getDate() - 30);
+    } else {
+      // today
+      startDate.setHours(0, 0, 0, 0);
+    }
+
+    // Group the time distribution by hour for "today", by day for week/month.
+    const timeFormat = range === "today" ? "%H:00" : "%Y-%m-%d";
 
     /* =========================================
-       1. AVERAGE SENSOR VALUES TODAY
+       1. AVERAGE SENSOR VALUES
        ========================================= */
 
     const avgData = await HelmetData.aggregate([
       {
         $match: {
-          timestamp: { $gte: startOfDay }
+          timestamp: { $gte: startDate }
         }
       },
       {
@@ -41,7 +57,7 @@ exports.getTodayAnalytics = async (req, res) => {
     const alertCounts = await HelmetData.aggregate([
       {
         $match: {
-          timestamp: { $gte: startOfDay }
+          timestamp: { $gte: startDate }
         }
       },
       {
@@ -55,7 +71,8 @@ exports.getTodayAnalytics = async (req, res) => {
     const alerts = {
       emergency: 0,
       critical: 0,
-      warning: 0
+      warning: 0,
+      safe: 0
     };
 
     alertCounts.forEach(a => {
@@ -63,6 +80,7 @@ exports.getTodayAnalytics = async (req, res) => {
       if (a._id === "EMERGENCY") alerts.emergency = a.count;
       if (a._id === "CRITICAL") alerts.critical = a.count;
       if (a._id === "WARNING") alerts.warning = a.count;
+      if (a._id === "SAFE") alerts.safe = a.count;
 
     });
 
@@ -110,7 +128,7 @@ exports.getTodayAnalytics = async (req, res) => {
     const timeDistribution = await HelmetData.aggregate([
       {
         $match: {
-          timestamp: { $gte: startOfDay }
+          timestamp: { $gte: startDate }
         }
       },
       {
@@ -118,7 +136,7 @@ exports.getTodayAnalytics = async (req, res) => {
           _id: {
             hour: {
               $dateToString: {
-                format: "%H:00",
+                format: timeFormat,
                 date: "$timestamp",
                 timezone: "Asia/Colombo"
               }

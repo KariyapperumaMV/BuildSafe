@@ -119,7 +119,7 @@ const SensorGauge = ({
       </svg>
 
       <div className="gauge-value">
-        {value ?? "-"} {unit}
+        {value == null ? "-" : Math.round(value * 1000) / 1000} {unit}
       </div>
 
       {/* Sensor Label */}

@@ -1,7 +1,14 @@
 import logo from "../../pictures/logo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const WorkerSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
     <aside className="sidebar">
       <div className="logo">
@@ -12,19 +19,11 @@ const WorkerSidebar = () => {
         <NavLink to="/worker/dashboard" className="nav-item">
           Home
         </NavLink>
-
-        <NavLink to="" className="nav-item">
-          Users
-        </NavLink>
-
-        <NavLink to="" className="nav-item">
-          Reports
-        </NavLink>
-
-        <NavLink to="" className="nav-item">
-          Analytics
-        </NavLink>
       </nav>
+
+      <button className="logout-btn" onClick={handleLogout}>
+        <span className="logout-icon">⏻</span> Logout
+      </button>
     </aside>
   );
 };

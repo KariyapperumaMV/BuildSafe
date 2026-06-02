@@ -1,7 +1,14 @@
 import logo from "../../pictures/logo.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const AdminSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
     <aside className="sidebar">
       <div className="logo">
@@ -25,6 +32,10 @@ const AdminSidebar = () => {
           Analytics
         </NavLink>
       </nav>
+
+      <button className="logout-btn" onClick={handleLogout}>
+        <span className="logout-icon">⏻</span> Logout
+      </button>
     </aside>
   );
 };

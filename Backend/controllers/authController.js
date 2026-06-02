@@ -44,7 +44,8 @@ exports.login = async (req, res) => {
       user: {
         userId: user.userId,
         name: user.name,
-        user_type: user.user_type
+        user_type: user.user_type,
+        helmet: user.helmet
       }
     });
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import SensorGauge from "../components/SensorGauge";
+import { SENSOR_META } from "../components/sensorMeta";
 
 import {
   PieChart,
@@ -17,100 +18,6 @@ import {
 } from "recharts";
 
 /* =====================================================
-   SENSOR CONFIG
-===================================================== */
-
-const SENSOR_META = {
-
-  noise_db: {
-    label: "Sound level",
-    unit: "dB",
-    type: "sound",
-    min: 30,
-    max: 100,
-    thresholds: [
-      { value: 30, color: "#2ecc71", label: "30" },
-      { value: 80, color: "#2ecc71", label: "80" },
-      { value: 90, color: "#f1c40f", label: "90" },
-      { value: 100, color: "#e74c3c", label: "100" }
-    ]
-  },
-
-  ambient_temp: {
-    label: "Ambient temperature",
-    unit: "°C",
-    type: "ambient",
-    min: 22,
-    max: 45,
-    thresholds: [
-      { value: 22, color: "#2ecc71", label: "22" },
-      { value: 27, color: "#2ecc71", label: "27" },
-      { value: 35, color: "#f1c40f", label: "35" },
-      { value: 45, color: "#e74c3c", label: "45" }
-    ]
-  },
-
-  gas_ppm: {
-    label: "PPM level",
-    unit: "ppm",
-    type: "gas",
-    min: 0,
-    max: 400,
-    thresholds: [
-      { value: 0, color: "#2ecc71", label: "0" },
-      { value: 150, color: "#2ecc71", label: "150" },
-      { value: 300, color: "#f1c40f", label: "300" },
-      { value: 400, color: "#e74c3c", label: "400" }
-    ]
-  },
-
-  uv_index: {
-    label: "UV light",
-    unit: "",
-    type: "uv",
-    min: 0,
-    max: 10,
-    thresholds: [
-      { value: 0, color: "#2ecc71", label: "0" },
-      { value: 3, color: "#2ecc71", label: "3" },
-      { value: 8, color: "#f1c40f", label: "8" },
-      { value: 10, color: "#e74c3c", label: "10" }
-    ]
-  },
-
-  body_temp: {
-    label: "Body temperature",
-    unit: "°C",
-    type: "body",
-    min: 28,
-    max: 42,
-    thresholds: [
-      { value: 30, color: "#e74c3c", label: "30" },
-      { value: 35, color: "#f1c40f", label: "35" },
-      { value: 38, color: "#2ecc71", label: "38" },
-      { value: 39, color: "#f1c40f", label: "39" },
-      { value: 42, color: "#e74c3c", label: "42" }
-    ]
-  },
-
-  heart_rate: {
-    label: "Heart rate",
-    unit: "bpm",
-    type: "heart",
-    min: 80,
-    max: 180,
-    thresholds: [
-      { value: 85, color: "#e74c3c", label: "85" },
-      { value: 88, color: "#f1c40f", label: "88" },
-      { value: 149, color: "#2ecc71", label: "149" },
-      { value: 175, color: "#f1c40f", label: "175" },
-      { value: 180, color: "#e74c3c", label: "180" }
-    ]
-  }
-
-};
-
-/* =====================================================
    CHART COLORS
 ===================================================== */
 
@@ -118,14 +25,22 @@ const RISK_COLORS = {
   safe: "#2ecc71",
   warning: "#f1c40f",
   critical: "#e74c3c",
-  emergency: "#000000"
+  emergency: "#b06bff"
 };
+
+const TABS = [
+  { key: "today", label: "Today" },
+  { key: "week", label: "Week" },
+  { key: "month", label: "Month" }
+];
 
 /* =====================================================
    COMPONENT
 ===================================================== */
 
 const AdminAnalytics = () => {
+
+  const [range, setRange] = useState("today");
 
   const [avgEnvironment, setAvgEnvironment] = useState({});
   const [avgBody, setAvgBody] = useState({});
@@ -135,14 +50,14 @@ const AdminAnalytics = () => {
 
   useEffect(() => {
     fetchAnalytics();
-  }, []);
+  }, [range]);
 
   const fetchAnalytics = async () => {
 
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/analytics/today"
+        `http://localhost:5000/api/analytics/today?range=${range}`
       );
 
       const data = res.data;
@@ -159,22 +74,35 @@ const AdminAnalytics = () => {
 
   };
 
-  const totalWorkers = riskLevels.reduce(
-    (sum, r) => sum + r.value,
-    0
-  );
+  const totalWorkers = riskLevels.reduce((sum, r) => sum + r.value, 0);
+
+  const getRisk = (name) =>
+    riskLevels.find((r) => r.name === name)?.value || 0;
 
   return (
 
     <div className="analytics-container">
 
+      {/* TABS */}
+      <div className="analytics-tabs">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            className={`tab ${range === t.key ? "active" : ""}`}
+            onClick={() => setRange(t.key)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {/* TOP ROW */}
-      <div className="dashboard-top">
+      <div className="analytics-top">
 
         {/* Average Environment */}
-        <div className="glass-card analytics-card">
+        <div className="dash-card analytics-card">
 
-          <h3>Average Environment Data</h3>
+          <h3 className="card-title">Average Environment Data</h3>
 
           <div className="gauge-row">
 
@@ -207,27 +135,40 @@ const AdminAnalytics = () => {
         </div>
 
         {/* Total Alerts */}
-        <div className="glass-card analytics-card">
+        <div className="dash-card analytics-card">
 
-          <h3>Total Alerts</h3>
+          <h3 className="card-title">Total Alerts</h3>
 
-          <div className="alerts-container">
+          <div className="total-alerts-list">
 
-            <div>
-              <h2>{alerts.emergency || 0}</h2>
-              <p>Emergency Alerts</p>
+            <div className="alert-stat-row">
+              <span className="alert-dot emergency" />
+              <span className="alert-stat-label">Emergency Alerts</span>
+              <span className="alert-stat-count">{alerts.emergency || 0}</span>
             </div>
 
-            <div>
-              <h2>{alerts.critical || 0}</h2>
-              <p>Critical Alerts</p>
+            <div className="alert-stat-row">
+              <span className="alert-dot critical" />
+              <span className="alert-stat-label">Critical Alerts</span>
+              <span className="alert-stat-count">{alerts.critical || 0}</span>
             </div>
 
-            <div>
-              <h2>{alerts.warning || 0}</h2>
-              <p>Warning Alerts</p>
+            <div className="alert-stat-row">
+              <span className="alert-dot warning" />
+              <span className="alert-stat-label">Warning Alerts</span>
+              <span className="alert-stat-count">{alerts.warning || 0}</span>
             </div>
 
+            <div className="alert-stat-row">
+              <span className="alert-dot safe" />
+              <span className="alert-stat-label">Safe Alerts</span>
+              <span className="alert-stat-count">{alerts.safe || 0}</span>
+            </div>
+
+          </div>
+
+          <div className="card-footer single">
+            <span className="view-all">View All ›</span>
           </div>
 
         </div>
@@ -235,12 +176,12 @@ const AdminAnalytics = () => {
       </div>
 
       {/* SECOND ROW */}
-      <div className="dashboard-bottom">
+      <div className="analytics-bottom">
 
         {/* Body Data */}
-        <div className="glass-card analytics-card">
+        <div className="dash-card analytics-card">
 
-          <h3>Body Data</h3>
+          <h3 className="card-title">Body Data</h3>
 
           <div className="gauge-row">
 
@@ -258,42 +199,60 @@ const AdminAnalytics = () => {
 
           </div>
 
+          <div className="card-footer single">
+            <span className="view-all">View Detailed Report ›</span>
+          </div>
+
         </div>
 
         {/* Risk Distribution */}
-        <div className="glass-card analytics-card">
+        <div className="dash-card analytics-card">
 
-          <h3>Risk Level Distribution</h3>
+          <h3 className="card-title">Risk Level Distribution</h3>
 
-          <ResponsiveContainer width="100%" height={260}>
+          <div className="risk-row">
 
-            <PieChart>
+            <div className="risk-chart">
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie
+                    data={riskLevels}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={65}
+                    outerRadius={95}
+                    paddingAngle={2}
+                    stroke="none"
+                  >
+                    {riskLevels.map((entry, index) => (
+                      <Cell key={index} fill={RISK_COLORS[entry.name]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
 
-              <Pie
-                data={riskLevels}
-                dataKey="value"
-                nameKey="name"
-                innerRadius={70}
-                outerRadius={100}
-              >
+            <div className="risk-legend">
+              <div className="legend-item">
+                <span className="legend-dot safe" />
+                <span className="legend-count">{getRisk("safe")}</span> Safe
+              </div>
+              <div className="legend-item">
+                <span className="legend-dot warning" />
+                <span className="legend-count">{getRisk("warning")}</span> Warning
+              </div>
+              <div className="legend-item">
+                <span className="legend-dot critical" />
+                <span className="legend-count">{getRisk("critical")}</span> Critical
+              </div>
+            </div>
 
-                {riskLevels.map((entry, index) => (
-                  <Cell
-                    key={index}
-                    fill={RISK_COLORS[entry.name]}
-                  />
-                ))}
+          </div>
 
-              </Pie>
-
-              <Tooltip />
-
-            </PieChart>
-
-          </ResponsiveContainer>
-
-          <div style={{ textAlign: "center" }}>
-            {totalWorkers} Users
+          <div className="card-footer">
+            <span className="view-all">View Users List</span>
+            <span className="view-all">View All ›</span>
           </div>
 
         </div>
@@ -301,44 +260,34 @@ const AdminAnalytics = () => {
       </div>
 
       {/* TIME DISTRIBUTION */}
-      <div className="glass-card analytics-card">
+      <div className="dash-card analytics-card">
 
-        <h3>
+        <h3 className="card-title">
           Average Environment Data – Distribution According To Time
         </h3>
 
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={280}>
 
           <LineChart data={timeDistribution}>
 
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
 
-            <XAxis dataKey="time" />
+            <XAxis dataKey="time" stroke="rgba(255,255,255,0.6)" />
 
-            <YAxis />
+            <YAxis stroke="rgba(255,255,255,0.6)" />
 
-            <Tooltip />
-
-            <Line
-              type="monotone"
-              dataKey="ambient_temp"
-              stroke="#2ecc71"
-              strokeWidth={2}
+            <Tooltip
+              contentStyle={{
+                background: "#1b1745",
+                border: "1px solid rgba(255,255,255,0.15)",
+                borderRadius: "10px",
+                color: "#fff"
+              }}
             />
 
-            <Line
-              type="monotone"
-              dataKey="noise_db"
-              stroke="#3498db"
-              strokeWidth={2}
-            />
-
-            <Line
-              type="monotone"
-              dataKey="gas_ppm"
-              stroke="#f1c40f"
-              strokeWidth={2}
-            />
+            <Line type="monotone" dataKey="ambient_temp" stroke="#2ecc71" strokeWidth={2} />
+            <Line type="monotone" dataKey="noise_db" stroke="#3498db" strokeWidth={2} />
+            <Line type="monotone" dataKey="gas_ppm" stroke="#f1c40f" strokeWidth={2} />
 
           </LineChart>
 
